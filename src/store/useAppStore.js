@@ -22,6 +22,15 @@ const generatePaperHash = (text) => {
 export const useAppStore = create(
   persist(
     (set, get) => ({
+      // API Key (stored in localStorage)
+      apiKey: '',
+      setApiKey: (key) => set({ apiKey: key }),
+      getApiKey: () => {
+        const state = get();
+        // Priority: stored key > env variable
+        return state.apiKey || import.meta.env.VITE_GEMINI_API_KEY || '';
+      },
+
       // User persona
       persona: 'Engineer', // 'Student' | 'Engineer' | 'Expert'
       setPersona: (persona) => set({ persona }),
@@ -97,6 +106,10 @@ export const useAppStore = create(
       isChatOpen: false,
       setIsChatOpen: (isOpen) => set({ isChatOpen: isOpen }),
 
+      // Settings modal state
+      isSettingsOpen: false,
+      setIsSettingsOpen: (isOpen) => set({ isSettingsOpen: isOpen }),
+
       // Loading states
       isAnalyzing: false,
       setIsAnalyzing: (value) => set({ isAnalyzing: value }),
@@ -121,6 +134,7 @@ export const useAppStore = create(
       partialize: (state) => ({
         persona: state.persona,
         analysisHistory: state.analysisHistory,
+        apiKey: state.apiKey, // Persist API key
       }),
     }
   )

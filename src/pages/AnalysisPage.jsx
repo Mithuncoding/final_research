@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Download, Share2, MessageSquare, Sparkles, BookOpen, Lightbulb, User, CheckCircle2, Star, Search, Network, BarChart3 } from 'lucide-react';
+import { ArrowLeft, Download, Share2, MessageSquare, Sparkles, BookOpen, Lightbulb, User, CheckCircle2, Star, Search, TrendingUp, BarChart3 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAppStore } from '../store/useAppStore';
 import { useMetricsStore } from '../store/useMetricsStore';
@@ -17,7 +17,7 @@ import OverviewTab from '../components/analysis/OverviewTab';
 import CritiqueTab from '../components/analysis/CritiqueTab';
 import IdeationTab from '../components/analysis/IdeationTab';
 import RelatedPapersTab from '../components/analysis/RelatedPapersTab';
-import KnowledgeGraphTab from '../components/analysis/KnowledgeGraphTab';
+import InsightsHub from '../components/analysis/InsightsHub';
 import AnalyticsTab from '../components/analysis/AnalyticsTab';
 import ChatInterface from '../components/chat/ChatInterface';
 
@@ -50,24 +50,32 @@ export default function AnalysisPage() {
       return;
     }
 
-    // If currentAnalysis is already set (from history page), restore the cache
+    // If currentAnalysis is already set (from history page or demo mode), restore the cache
     if (currentAnalysis && !cache.overview) {
-      console.log('📚 Restoring analysis from history...');
+      console.log('📚 Restoring analysis...');
       
       // Set paper hash if available
       if (currentAnalysis.paperHash) {
         setPaperHash(currentAnalysis.paperHash);
       }
       
+      // Check if this is demo mode - load ALL cached data
+      const isDemo = currentAnalysis.isDemo;
+      
       // Restore cache from the existing analysis
       setCache({
         takeaways: currentAnalysis.keyFindings,
         overview: currentAnalysis,
-        critique: currentAnalysis.strengths ? currentAnalysis : null,
-        ideation: currentAnalysis.hypotheses ? currentAnalysis : null
+        critique: currentAnalysis.advancedAnalysis || (currentAnalysis.strengths ? currentAnalysis : null),
+        ideation: currentAnalysis.advancedAnalysis || (currentAnalysis.hypotheses ? currentAnalysis : null),
+        related: currentAnalysis.relatedQueries || null
       });
       
-      toast.success('Analysis restored from history!');
+      if (isDemo) {
+        toast.success('🎯 Demo Mode: All features pre-loaded! Explore freely.');
+      } else {
+        toast.success('Analysis restored from history!');
+      }
       return;
     }
 
@@ -431,15 +439,51 @@ export default function AnalysisPage() {
                   <span className="hidden md:inline">Chat</span>
                 </Button>
               <div className="relative">
-                <Button onClick={() => setShowExportMenu(!showExportMenu)} size="sm">
+                <Button onClick={() => setShowExportMenu(!showExportMenu)} size="sm" className="bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white shadow-lg">
                   <Download className="w-4 h-4 mr-2" />
                   Export
                 </Button>
                 {showExportMenu && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-slate-200 py-2 z-50">
-                    <button onClick={() => handleExport('pdf')} className="w-full px-4 py-2 text-left hover:bg-slate-50 text-sm">Export as PDF</button>
-                    <button onClick={() => handleExport('markdown')} className="w-full px-4 py-2 text-left hover:bg-slate-50 text-sm">Export as Markdown</button>
-                    <button onClick={() => handleExport('pptx')} className="w-full px-4 py-2 text-left hover:bg-slate-50 text-sm">Export as PPTX</button>
+                  <div className="absolute right-0 mt-2 w-64 bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-slate-200 py-3 z-50 overflow-hidden">
+                    <div className="px-4 py-2 border-b border-slate-100">
+                      <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Export Analysis</p>
+                    </div>
+                    <button 
+                      onClick={() => handleExport('pdf')} 
+                      className="w-full px-4 py-3 text-left hover:bg-gradient-to-r hover:from-red-50 hover:to-orange-50 transition-all group flex items-center gap-3"
+                    >
+                      <span className="w-10 h-10 bg-gradient-to-br from-red-500 to-orange-500 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                        <span className="text-white text-lg">📄</span>
+                      </span>
+                      <div>
+                        <p className="font-semibold text-slate-800">PDF Report</p>
+                        <p className="text-xs text-slate-500">Professional formatted document</p>
+                      </div>
+                    </button>
+                    <button 
+                      onClick={() => handleExport('markdown')} 
+                      className="w-full px-4 py-3 text-left hover:bg-gradient-to-r hover:from-slate-50 hover:to-blue-50 transition-all group flex items-center gap-3"
+                    >
+                      <span className="w-10 h-10 bg-gradient-to-br from-slate-700 to-slate-900 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                        <span className="text-white text-lg">📝</span>
+                      </span>
+                      <div>
+                        <p className="font-semibold text-slate-800">Markdown</p>
+                        <p className="text-xs text-slate-500">For GitHub, Notion, Obsidian</p>
+                      </div>
+                    </button>
+                    <button 
+                      onClick={() => handleExport('pptx')} 
+                      className="w-full px-4 py-3 text-left hover:bg-gradient-to-r hover:from-orange-50 hover:to-amber-50 transition-all group flex items-center gap-3"
+                    >
+                      <span className="w-10 h-10 bg-gradient-to-br from-orange-500 to-amber-500 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                        <span className="text-white text-lg">📊</span>
+                      </span>
+                      <div>
+                        <p className="font-semibold text-slate-800">PowerPoint</p>
+                        <p className="text-xs text-slate-500">Ready for presentation</p>
+                      </div>
+                    </button>
                   </div>
                 )}
               </div>
@@ -501,13 +545,13 @@ export default function AnalysisPage() {
               Related Papers
             </TopTab>
             <TopTab 
-              active={activeTab === 'graph'} 
-              onClick={() => handleTabClick('graph')}
-              icon={<Network className="w-4 h-4" />}
+              active={activeTab === 'insights'} 
+              onClick={() => handleTabClick('insights')}
+              icon={<TrendingUp className="w-4 h-4" />}
               gradient="from-indigo-600 to-indigo-500"
               loaded={!!cache.overview}
             >
-              Knowledge Graph
+              Insights Hub
             </TopTab>
             <TopTab 
               active={activeTab === 'analytics'} 
@@ -630,8 +674,8 @@ export default function AnalysisPage() {
                 />
               )}
 
-              {activeTab === 'graph' && (cache.overview || currentAnalysis) && (
-                <KnowledgeGraphTab analysis={cache.overview || currentAnalysis} />
+              {activeTab === 'insights' && (cache.overview || currentAnalysis) && (
+                <InsightsHub analysis={{...(cache.overview || currentAnalysis), ...(cache.critique || {}), ...(cache.ideation || {})}} />
               )}
 
               {activeTab === 'analytics' && (cache.overview || currentAnalysis) && (

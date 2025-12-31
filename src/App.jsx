@@ -5,6 +5,7 @@ import AnalysisPage from './pages/AnalysisPage';
 import MultiPaperPage from './pages/MultiPaperPage';
 import HistoryPage from './pages/HistoryPage';
 import MetricsPage from './pages/MetricsPage';
+import AboutPage from './pages/AboutPage';
 import CommandPalette from './components/ui/CommandPalette';
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
         <Route path="/multi-paper" element={<MultiPaperPage />} />
         <Route path="/history" element={<HistoryPage />} />
         <Route path="/metrics" element={<MetricsPage />} />
+        <Route path="/about" element={<AboutPage />} />
       </Routes>
       <CommandPalette />
       <Toaster />
@@ -24,3 +26,4 @@ function App() {
 }
 
 export default App;
+

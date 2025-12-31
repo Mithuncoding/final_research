@@ -1,0 +1,41 @@
+graph TD
+    %% Define Styles
+    classDef default fill:#fff,stroke:#333,stroke-width:1px;
+    classDef phase fill:#f8fafc,stroke:#94a3b8,stroke-dasharray: 5 5;
+    classDef process fill:#f3e8ff,stroke:#9333ea,stroke-width:1.5px;
+    classDef decision fill:#fce7f3,stroke:#db2777,stroke-width:1.5px;
+    classDef model fill:#dcfce7,stroke:#16a34a,stroke-width:1.5px;
+
+    %% Main Flow
+    A([User Uploads File]):::process --> B{Valid Paper?}:::decision
+    B -- No --> Z([Reject]):::default
+    B -- Yes --> C[Extraction & Chunking]:::process
+    
+    C --> D[Expertise Quiz]:::process
+    D --> E[Set Persona]:::process
+    
+    E --> F{Task Router}:::decision
+    
+    %% Split processing
+    F -- "Light Tasks" --> G((Gemini Flash)):::model
+    F -- "Heavy Tasks" --> H((Gemini Pro)):::model
+    
+    %% Rejoin
+    G --> I[JSON Validation]:::process
+    H --> I
+    
+    %% Output
+    I --> J[Reactive Dashboard]:::process
+    
+    subgraph Outputs
+        direction LR
+        K[Summary]:::default
+        L[Critique]:::default
+        M[Ideation]:::default
+    end
+    
+    J --> K
+    J --> L
+    J --> M
+    
+    L --> N([Export PDF/PPT])

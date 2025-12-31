@@ -1,18 +1,35 @@
 // AI API Configuration
-const getApiKey = () => import.meta.env.VITE_GEMINI_API_KEY;
+const getApiKey = () => {
+  // Check localStorage first (set via app settings)
+  try {
+    const stored = localStorage.getItem('prism-storage');
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      if (parsed.state?.apiKey) {
+        return parsed.state.apiKey;
+      }
+    }
+  } catch (e) {
+    // Ignore parsing errors
+  }
+  // Fall back to env variable
+  return import.meta.env.VITE_GEMINI_API_KEY || '';
+};
 
-const AI_FAST_MODEL = "gemini-2.5-flash";
-const AI_ADVANCED_MODEL = "gemini-2.5-flash"; // User requested 2.5 Flash
-const AI_FALLBACK_MODEL = "gemini-2.5-flash";
+const AI_FAST_MODEL = "gemini-3-flash-preview";
+const AI_ADVANCED_MODEL = "gemini-3-flash-preview";
 
 const buildApiUrl = (model, apiKey) =>
   `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
 
-const FAST_API_URL = buildApiUrl(AI_FAST_MODEL, getApiKey());
-const ADVANCED_API_URL = buildApiUrl(AI_ADVANCED_MODEL, getApiKey());
+// Check if API key is available
+export const hasApiKey = () => {
+  const key = getApiKey();
+  return key && key.length > 0;
+};
 
 if (!getApiKey()) {
-  console.error("Missing VITE_GEMINI_API_KEY in .env file");
+  console.warn("⚠️ No API key found. Please set one in Settings or create a .env file with VITE_GEMINI_API_KEY");
 }
 
 // Schema definitions for structured output
@@ -240,11 +257,15 @@ export const SCHEMAS = {
           properties: {
             id: { type: "string" },
             label: { type: "string" },
-            group: { type: "string", description: "Category of the concept (e.g., Method, Result, Theory)" },
-            val: { type: "number", description: "Importance value (1-10)" }
+            group: {
+              type: "string",
+              description:
+                "Category of the concept (e.g., Method, Result, Theory)",
+            },
+            val: { type: "number", description: "Importance value (1-10)" },
           },
-          required: ["id", "label", "group", "val"]
-        }
+          required: ["id", "label", "group", "val"],
+        },
       },
       links: {
         type: "array",
@@ -253,14 +274,17 @@ export const SCHEMAS = {
           properties: {
             source: { type: "string", description: "ID of source node" },
             target: { type: "string", description: "ID of target node" },
-            relationship: { type: "string", description: "Description of the relationship" }
+            relationship: {
+              type: "string",
+              description: "Description of the relationship",
+            },
           },
-          required: ["source", "target", "relationship"]
-        }
-      }
+          required: ["source", "target", "relationship"],
+        },
+      },
     },
-    required: ["nodes", "links"]
-  }
+    required: ["nodes", "links"],
+  },
 };
 
 // Helper function to truncate text to fit token limits
@@ -316,6 +340,18 @@ export async function generateStructuredContent(
             responseMimeType: "application/json",
             responseSchema: schema,
           },
+          safetySettings: [
+            { category: "HARM_CATEGORY_HARASSMENT", threshold: "BLOCK_MEDIUM_AND_ABOVE" },
+            { category: "HARM_CATEGORY_HATE_SPEECH", threshold: "BLOCK_MEDIUM_AND_ABOVE" },
+            {
+              category: "HARM_CATEGORY_SEXUALLY_EXPLICIT",
+              threshold: "BLOCK_MEDIUM_AND_ABOVE",
+            },
+            {
+              category: "HARM_CATEGORY_DANGEROUS_CONTENT",
+              threshold: "BLOCK_MEDIUM_AND_ABOVE",
+            },
+          ],
         }),
       });
 
@@ -389,9 +425,9 @@ export async function generateStructuredContent(
 export async function streamChatResponse(messages, onChunk, retries = 3) {
   for (let attempt = 0; attempt < retries; attempt++) {
     try {
-      // Use gemini-2.5-flash explicitly for fast responses
+      // Use gemini-3-flash-preview for fast responses
       const apiKey = getApiKey();
-      const chatModel = "gemini-2.5-flash"; // Fast model for chat
+      const chatModel = "gemini-3-flash-preview"; // Latest model for chat
       const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${chatModel}:streamGenerateContent?key=${apiKey}`;
 
       const response = await fetch(apiUrl, {
@@ -416,15 +452,21 @@ export async function streamChatResponse(messages, onChunk, retries = 3) {
             candidateCount: 1,
           },
           safetySettings: [
-            { category: "HARM_CATEGORY_HARASSMENT", threshold: "BLOCK_NONE" },
-            { category: "HARM_CATEGORY_HATE_SPEECH", threshold: "BLOCK_NONE" },
+            {
+              category: "HARM_CATEGORY_HARASSMENT",
+              threshold: "BLOCK_MEDIUM_AND_ABOVE",
+            },
+            {
+              category: "HARM_CATEGORY_HATE_SPEECH",
+              threshold: "BLOCK_MEDIUM_AND_ABOVE",
+            },
             {
               category: "HARM_CATEGORY_SEXUALLY_EXPLICIT",
-              threshold: "BLOCK_NONE",
+              threshold: "BLOCK_MEDIUM_AND_ABOVE",
             },
             {
               category: "HARM_CATEGORY_DANGEROUS_CONTENT",
-              threshold: "BLOCK_NONE",
+              threshold: "BLOCK_MEDIUM_AND_ABOVE",
             },
           ],
         }),
