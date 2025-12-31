@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense, lazy } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Download, Share2, MessageSquare, Sparkles, BookOpen, Lightbulb, User, CheckCircle2, Star, Search, TrendingUp, BarChart3 } from 'lucide-react';
+import { ArrowLeft, Download, MessageSquare, Sparkles, BookOpen, Lightbulb, User, CheckCircle2, Star, Search, TrendingUp, BarChart3, Quote, AlignLeft } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAppStore } from '../store/useAppStore';
 import { useMetricsStore } from '../store/useMetricsStore';
@@ -11,15 +11,18 @@ import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 import { LoadingOverlay } from '../components/ui/Spinner';
 import { SkeletonCard } from '../components/ui/LoadingSpinner';
-import { Modal } from '../components/ui/Modal';
 import { toast } from '../components/ui/Toaster';
-import OverviewTab from '../components/analysis/OverviewTab';
-import CritiqueTab from '../components/analysis/CritiqueTab';
-import IdeationTab from '../components/analysis/IdeationTab';
-import RelatedPapersTab from '../components/analysis/RelatedPapersTab';
-import InsightsHub from '../components/analysis/InsightsHub';
-import AnalyticsTab from '../components/analysis/AnalyticsTab';
-import ChatInterface from '../components/chat/ChatInterface';
+
+// Lazy loaded components
+const OverviewTab = lazy(() => import('../components/analysis/OverviewTab'));
+const CritiqueTab = lazy(() => import('../components/analysis/CritiqueTab'));
+const IdeationTab = lazy(() => import('../components/analysis/IdeationTab'));
+const RelatedPapersTab = lazy(() => import('../components/analysis/RelatedPapersTab'));
+const InsightsHub = lazy(() => import('../components/analysis/InsightsHub'));
+const AnalyticsTab = lazy(() => import('../components/analysis/AnalyticsTab'));
+const ReaderTab = lazy(() => import('../components/analysis/ReaderTab'));
+const ChatInterface = lazy(() => import('../components/chat/ChatInterface'));
+const CitationModal = lazy(() => import('../components/ui/CitationModal'));
 
 export default function AnalysisPage() {
   const navigate = useNavigate();
@@ -29,8 +32,8 @@ export default function AnalysisPage() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [loadingStage, setLoadingStage] = useState('');
   const [showExpertiseSelector, setShowExpertiseSelector] = useState(!persona);
-  // const [showChat, setShowChat] = useState(false); // Moved to global store
   const [showExportMenu, setShowExportMenu] = useState(false);
+  const [showCitationModal, setShowCitationModal] = useState(false);
   
   // Smart caching - cache all loaded data (persists during session)
   const [cache, setCache] = useState({
@@ -82,6 +85,7 @@ export default function AnalysisPage() {
     if (!currentAnalysis && persona) {
       checkHistoryOrAnalyze();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [persona, currentAnalysis]);
   
   // Check if paper was analyzed before
@@ -332,6 +336,7 @@ export default function AnalysisPage() {
       case 'takeaways':
       case 'overview':
       case 'related':
+      case 'reader':
         setActiveTab(tab);
         break;
       case 'critique':
@@ -434,6 +439,10 @@ export default function AnalysisPage() {
                   <User className="w-4 h-4 md:mr-2" />
                   <span className="hidden md:inline">Change Level</span>
                 </Button>
+                <Button onClick={() => setShowCitationModal(true)} variant="ghost" size="sm" className="px-2 md:px-3">
+                  <Quote className="w-4 h-4 md:mr-2" />
+                  <span className="hidden md:inline">Cite</span>
+                </Button>
                 <Button onClick={() => setIsChatOpen(true)} variant="ghost" size="sm" className="px-2 md:px-3">
                   <MessageSquare className="w-4 h-4 md:mr-2" />
                   <span className="hidden md:inline">Chat</span>
@@ -515,6 +524,15 @@ export default function AnalysisPage() {
               Overview
             </TopTab>
             <TopTab 
+              active={activeTab === 'reader'} 
+              onClick={() => handleTabClick('reader')}
+              icon={<AlignLeft className="w-4 h-4" />}
+              gradient="from-teal-600 to-teal-500"
+              loaded={true}
+            >
+              Reader
+            </TopTab>
+            <TopTab 
               active={activeTab === 'critique'} 
               onClick={() => handleTabClick('critique')}
               icon={<Star className="w-4 h-4" />}
@@ -568,147 +586,150 @@ export default function AnalysisPage() {
 
         {/* Content Area */}
         <Card glass className="min-h-[600px]">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={activeTab}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.3 }}
-            >
-              {activeTab === 'takeaways' && (cache.takeaways || currentAnalysis?.keyFindings) && (
-                <div className="space-y-4">
-                  <h2 className="text-2xl font-bold gradient-text mb-6">Key Takeaways</h2>
-                  {(cache.takeaways || currentAnalysis.keyFindings).map((finding, i) => {
-                    // Handle both string and object formats
-                    const findingText = typeof finding === 'string' ? finding : finding.finding;
-                    const evidence = typeof finding === 'object' ? finding.evidence : null;
-                    
-                    return (
-                      <motion.div
-                        key={i}
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: i * 0.1 }}
-                        className="p-6 bg-gradient-to-br from-white to-slate-50 rounded-2xl border-2 border-slate-100 hover:border-prism-200 hover:shadow-lg transition-all duration-300"
-                      >
-                        <div className="flex items-start gap-4">
-                          <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-prism-600 to-accent-purple flex items-center justify-center text-white font-bold text-sm shadow-lg">
-                            {i + 1}
-                          </div>
-                          <div className="flex-1">
-                            <p className="text-slate-700 leading-relaxed mb-2">{findingText}</p>
-                            {evidence && (
-                              <p className="text-sm text-slate-500 italic pl-4 border-l-2 border-prism-200">
-                                {evidence}
-                              </p>
-                            )}
-                          </div>
-                        </div>
-                      </motion.div>
-                    );
-                  })}
-                </div>
-              )}
-
-              {activeTab === 'overview' && (cache.overview || currentAnalysis) && (
-                <OverviewTab analysis={cache.overview || currentAnalysis} />
-              )}
-
-              {activeTab === 'critique' && (
-                loadingTabs.critique ? (
-                  <div className="space-y-6">
-                    <div className="flex items-center gap-3 mb-6">
-                      <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-600 to-purple-500 flex items-center justify-center animate-pulse">
-                        <Star className="w-8 h-8 text-white" />
-                      </div>
-                      <div>
-                        <div className="h-6 w-48 bg-slate-200 rounded animate-pulse mb-2"></div>
-                        <div className="h-4 w-64 bg-slate-100 rounded animate-pulse"></div>
-                      </div>
-                    </div>
-                    {[1, 2, 3].map((i) => (
-                      <SkeletonCard key={i} />
-                    ))}
-                  </div>
-                ) : cache.critique ? (
-                  <CritiqueTab analysis={{ ...currentAnalysis, ...cache.critique }} />
-                ) : (
-                  <div className="text-center py-16">
-                    <p className="text-slate-600">Critique analysis not loaded yet</p>
-                  </div>
-                )
-              )}
-
-              {activeTab === 'ideation' && (
-                loadingTabs.ideation ? (
-                  <div className="space-y-6">
-                    <div className="flex items-center gap-3 mb-6">
-                      <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-pink-600 to-pink-500 flex items-center justify-center animate-pulse">
-                        <Lightbulb className="w-8 h-8 text-white" />
-                      </div>
-                      <div>
-                        <div className="h-6 w-48 bg-slate-200 rounded animate-pulse mb-2"></div>
-                        <div className="h-4 w-64 bg-slate-100 rounded animate-pulse"></div>
-                      </div>
-                    </div>
-                    {[1, 2, 3].map((i) => (
-                      <SkeletonCard key={i} />
-                    ))}
-                  </div>
-                ) : cache.ideation ? (
-                  <IdeationTab analysis={cache.ideation} />
-                ) : (
-                  <div className="text-center py-16">
-                    <p className="text-slate-600">Click to generate AI hypotheses</p>
-                  </div>
-                )
-              )}
-
-              {activeTab === 'related' && currentAnalysis && (
-                <RelatedPapersTab 
-                  title={currentAnalysis.title}
-                  summary={currentAnalysis.summary}
-                  methodology={currentAnalysis.methodology}
-                  keyFindings={currentAnalysis.keyFindings}
-                />
-              )}
-
-              {activeTab === 'insights' && (cache.overview || currentAnalysis) && (
-                <InsightsHub analysis={{...(cache.overview || currentAnalysis), ...(cache.critique || {}), ...(cache.ideation || {})}} />
-              )}
-
-              {activeTab === 'analytics' && (cache.overview || currentAnalysis) && (
-                <AnalyticsTab 
-                  analysis={cache.overview || currentAnalysis} 
-                  fullText={currentAnalysis.fullText || uploadedFiles[0]?.parsedData?.text} 
-                />
-              )}
-
-              {activeTab === 'references' && (
-                loadingTabs.references ? (
+          <Suspense fallback={<div className="p-12 text-center"><SkeletonCard /></div>}>
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={activeTab}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.3 }}
+              >
+                {activeTab === 'takeaways' && (cache.takeaways || currentAnalysis?.keyFindings) && (
                   <div className="space-y-4">
-                    {[1, 2, 3, 4, 5].map((i) => (
-                      <div key={i} className="bg-white rounded-xl p-4 border border-slate-200 animate-pulse">
-                        <div className="h-5 bg-slate-200 rounded w-4/5 mb-2"></div>
-                        <div className="h-3 bg-slate-100 rounded w-full"></div>
-                      </div>
-                    ))}
+                    <h2 className="text-2xl font-bold gradient-text mb-6">Key Takeaways</h2>
+                    {(cache.takeaways || currentAnalysis.keyFindings).map((finding, i) => {
+                      // Handle both string and object formats
+                      const findingText = typeof finding === 'string' ? finding : finding.finding;
+                      const evidence = typeof finding === 'object' ? finding.evidence : null;
+                      
+                      return (
+                        <motion.div
+                          key={i}
+                          initial={{ opacity: 0, x: -20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: i * 0.1 }}
+                          className="p-6 bg-gradient-to-br from-white to-slate-50 rounded-2xl border-2 border-slate-100 hover:border-prism-200 hover:shadow-lg transition-all duration-300"
+                        >
+                          <div className="flex items-start gap-4">
+                            <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-prism-600 to-accent-purple flex items-center justify-center text-white font-bold text-sm shadow-lg">
+                              {i + 1}
+                            </div>
+                            <div className="flex-1">
+                              <p className="text-slate-700 leading-relaxed mb-2">{findingText}</p>
+                              {evidence && (
+                                <p className="text-sm text-slate-500 italic pl-4 border-l-2 border-prism-200">
+                                  {evidence}
+                                </p>
+                              )}
+                            </div>
+                          </div>
+                        </motion.div>
+                      );
+                    })}
                   </div>
-                ) : null
-              )}
-            </motion.div>
-          </AnimatePresence>
+                )}
+
+                {activeTab === 'overview' && (cache.overview || currentAnalysis) && (
+                  <OverviewTab analysis={cache.overview || currentAnalysis} />
+                )}
+
+                {activeTab === 'reader' && (
+                  <ReaderTab fullText={currentAnalysis.fullText || uploadedFiles[0]?.parsedData?.text} />
+                )}
+
+                {activeTab === 'critique' && (
+                  loadingTabs.critique ? (
+                    <div className="space-y-6">
+                      <div className="flex items-center gap-3 mb-6">
+                        <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-600 to-purple-500 flex items-center justify-center animate-pulse">
+                          <Star className="w-8 h-8 text-white" />
+                        </div>
+                        <div>
+                          <div className="h-6 w-48 bg-slate-200 rounded animate-pulse mb-2"></div>
+                          <div className="h-4 w-64 bg-slate-100 rounded animate-pulse"></div>
+                        </div>
+                      </div>
+                      {[1, 2, 3].map((i) => (
+                        <SkeletonCard key={i} />
+                      ))}
+                    </div>
+                  ) : cache.critique ? (
+                    <CritiqueTab analysis={{ ...currentAnalysis, ...cache.critique }} />
+                  ) : (
+                    <div className="text-center py-16">
+                      <p className="text-slate-600">Critique analysis not loaded yet</p>
+                    </div>
+                  )
+                )}
+
+                {activeTab === 'ideation' && (
+                  loadingTabs.ideation ? (
+                    <div className="space-y-6">
+                      <div className="flex items-center gap-3 mb-6">
+                        <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-pink-600 to-pink-500 flex items-center justify-center animate-pulse">
+                          <Lightbulb className="w-8 h-8 text-white" />
+                        </div>
+                        <div>
+                          <div className="h-6 w-48 bg-slate-200 rounded animate-pulse mb-2"></div>
+                          <div className="h-4 w-64 bg-slate-100 rounded animate-pulse"></div>
+                        </div>
+                      </div>
+                      {[1, 2, 3].map((i) => (
+                        <SkeletonCard key={i} />
+                      ))}
+                    </div>
+                  ) : cache.ideation ? (
+                    <IdeationTab analysis={cache.ideation} />
+                  ) : (
+                    <div className="text-center py-16">
+                      <p className="text-slate-600">Click to generate AI hypotheses</p>
+                    </div>
+                  )
+                )}
+
+                {activeTab === 'related' && currentAnalysis && (
+                  <RelatedPapersTab 
+                    title={currentAnalysis.title}
+                    summary={currentAnalysis.summary}
+                    methodology={currentAnalysis.methodology}
+                    keyFindings={currentAnalysis.keyFindings}
+                  />
+                )}
+
+                {activeTab === 'insights' && (cache.overview || currentAnalysis) && (
+                  <InsightsHub analysis={{...(cache.overview || currentAnalysis), ...(cache.critique || {}), ...(cache.ideation || {})}} />
+                )}
+
+                {activeTab === 'analytics' && (cache.overview || currentAnalysis) && (
+                  <AnalyticsTab 
+                    analysis={cache.overview || currentAnalysis} 
+                    fullText={currentAnalysis.fullText || uploadedFiles[0]?.parsedData?.text} 
+                  />
+                )}
+              </motion.div>
+            </AnimatePresence>
+          </Suspense>
         </Card>
       </div>
 
-      {/* Chat Modal */}
-      {isChatOpen && currentAnalysis && (
-        <ChatInterface 
-          paperContext={currentAnalysis} 
-          onClose={() => setIsChatOpen(false)} 
-        />
-      )}
+      {/* Modals */}
+      <Suspense fallback={null}>
+        {showCitationModal && (
+          <CitationModal 
+            analysis={currentAnalysis} 
+            isOpen={showCitationModal} 
+            onClose={() => setShowCitationModal(false)} 
+          />
+        )}
+        
+        {isChatOpen && currentAnalysis && (
+          <ChatInterface 
+            paperContext={currentAnalysis} 
+            onClose={() => setIsChatOpen(false)} 
+          />
+        )}
+      </Suspense>
     </div>
   );
 }

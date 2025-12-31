@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppStore } from '../store/useAppStore';
-import { ArrowLeft, FileText, Search, Plus, X, Calendar, BookOpen, Sparkles, Clock, Tag } from 'lucide-react';
+import { ArrowLeft, FileText, Search, Plus, X, BookOpen, Sparkles, Clock, Tag } from 'lucide-react';
 import { formatDate } from '../utils/helpers';
 
 export default function HistoryPage() {
@@ -89,9 +89,18 @@ export default function HistoryPage() {
             <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
             <span>Back to Home</span>
           </button>
-          <div className="flex items-center gap-3">
-            <img src="/icon.svg" alt="Prism" className="w-10 h-10" />
-            <span className="text-xl font-bold">PRISM</span>
+          <div className="flex items-center gap-4">
+            <button 
+              onClick={() => navigate('/compare')}
+              className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 rounded-full text-sm font-medium transition-all backdrop-blur-sm border border-white/10 hover:border-white/30"
+            >
+              <Sparkles className="w-4 h-4" />
+              <span>Compare Papers</span>
+            </button>
+            <div className="flex items-center gap-3">
+              <img src="/icon.svg" alt="Prism" className="w-10 h-10" />
+              <span className="text-xl font-bold">PRISM</span>
+            </div>
           </div>
         </div>
       </header>
@@ -273,7 +282,7 @@ export default function HistoryPage() {
           
           {filteredHistory.length === 0 && searchQuery && (
             <div className="text-center py-12 text-white/60">
-              No papers found matching "{searchQuery}"
+              No papers found matching &quot;{searchQuery}&quot;
             </div>
           )}
         </div>
