@@ -506,11 +506,15 @@ export async function streamChatResponse(messages, onChunk, retries = 3) {
       const reader = response.body.getReader();
       const decoder = new TextDecoder();
       let buffer = "";
+      let isDone = false;
 
-      while (true) {
+      while (!isDone) {
         const { done, value } = await reader.read();
 
-        if (done) break;
+        if (done) {
+          isDone = true;
+          break;
+        }
 
         buffer += decoder.decode(value, { stream: true });
 
