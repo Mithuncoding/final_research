@@ -2,102 +2,146 @@
 // This allows the app to work without API calls during presentations
 
 export const DEMO_PAPER = {
-  name: "Deep Learning for Network Intrusion Detection - A Survey.pdf",
-  text: `Deep Learning for Network Intrusion Detection: A Comprehensive Survey
+  name: "LLMs for Scientific Discovery - Nature 2024.pdf",
+  text: `Large Language Models for Scientific Discovery: A Comprehensive Analysis
 
 Abstract
-Network intrusion detection systems (NIDS) are critical for cybersecurity. This survey comprehensively reviews deep learning approaches for NIDS, analyzing 150+ papers from 2018-2024. We categorize methods into CNN-based, RNN-based, and hybrid architectures, evaluating performance on benchmark datasets including NSL-KDD, CICIDS2017, and UNSW-NB15. Our findings reveal that hybrid models combining CNNs with attention mechanisms achieve 99.2% accuracy, outperforming traditional machine learning by 15%. We identify key challenges including adversarial attacks, class imbalance, and real-time processing requirements.
+Large Language Models (LLMs) are revolutionizing scientific research across domains. This comprehensive study analyzes the application of GPT-4, Claude, and open-source models (LLaMA, Mistral) in accelerating scientific discovery. We evaluate performance on 500+ research papers across biology, chemistry, physics, and materials science. Our findings demonstrate that LLM-assisted research reduces literature review time by 73%, improves hypothesis generation quality by 45%, and achieves 94.3% accuracy in extracting key findings. We introduce PRISM-Bench, a new benchmark for evaluating AI research assistants, and propose a framework for responsible AI-augmented scientific discovery.
 
 1. Introduction
-The exponential growth of network traffic has made manual intrusion detection impractical. Traditional signature-based systems fail to detect zero-day attacks, while anomaly-based systems suffer from high false positive rates. Deep learning offers a promising solution by automatically learning complex patterns from network traffic data.
+The exponential growth of scientific literature has created an unprecedented challenge for researchers. With over 5 million papers published annually, no human can comprehensively review their field. Large Language Models offer a transformative solution by enabling rapid synthesis of vast knowledge bases, intelligent hypothesis generation, and automated experimental design suggestions.
+
+Recent advances in LLMs—particularly GPT-4's 128K context window and multimodal capabilities—have opened new frontiers in AI-assisted research. These models can now process entire research papers, understand complex figures, and generate novel hypotheses grounded in existing literature.
 
 2. Methodology
-We conducted a systematic literature review following PRISMA guidelines. We searched IEEE Xplore, ACM Digital Library, and Google Scholar using keywords: "deep learning", "intrusion detection", "network security", "CNN", "LSTM", "autoencoder". After screening 892 papers, we included 156 studies meeting our inclusion criteria.
+2.1 Dataset Construction
+We curated a diverse corpus of 500 peer-reviewed papers from Nature, Science, Cell, and Physical Review Letters (2020-2024). Papers were stratified across:
+- Biology/Medicine: 150 papers (genomics, drug discovery, protein structure)
+- Chemistry: 120 papers (synthesis, catalysis, materials)
+- Physics: 130 papers (quantum computing, condensed matter, astrophysics)
+- Interdisciplinary: 100 papers (AI for science, computational biology)
 
-2.1 Data Preprocessing Pipeline
-Network traffic data requires extensive preprocessing. We normalize numerical features using min-max scaling, encode categorical features using one-hot encoding, and handle class imbalance using SMOTE oversampling. Feature selection using correlation analysis reduces dimensionality by 40%.
+2.2 Evaluation Framework
+We developed PRISM-Bench with the following metrics:
+- Factual Accuracy: Does the summary correctly represent findings?
+- Comprehensiveness: Are all key contributions captured?
+- Critical Analysis: Does the AI identify limitations and future directions?
+- Hypothesis Quality: Are generated hypotheses novel and testable?
 
-2.2 Deep Learning Architectures
-We analyze three main architectures:
-- Convolutional Neural Networks (CNNs): Extract spatial features from packet payloads
-- Recurrent Neural Networks (RNNs/LSTMs): Capture temporal patterns in traffic flows
-- Autoencoders: Learn compact representations for anomaly detection
+2.3 Model Comparison
+We evaluated:
+- GPT-4 Turbo (128K context)
+- Claude 3 Opus (200K context)
+- Gemini 1.5 Pro (1M context)
+- LLaMA-3 70B (open-source baseline)
+- Mistral Large (open-source)
 
 3. Results
-Our experimental evaluation on CICIDS2017 shows:
-- CNN models: 97.8% accuracy, 96.2% F1-score
-- LSTM models: 98.1% accuracy, 97.5% F1-score
-- Hybrid CNN-LSTM: 99.2% accuracy, 98.8% F1-score
-- Training time: 45 minutes on NVIDIA RTX 3090
 
-The hybrid architecture outperforms single-model approaches by leveraging both spatial and temporal features.
+3.1 Literature Review Acceleration
+LLM-assisted review dramatically reduced research time:
+- Traditional manual review: 8.2 hours per paper
+- LLM-assisted review: 2.2 hours per paper (73% reduction)
+- Quality scores remained comparable (4.2 vs 4.1 on 5-point scale)
+
+3.2 Summary Accuracy
+Model performance on factual accuracy (PRISM-Bench):
+| Model | Accuracy | Comprehensiveness | Critical Analysis |
+|-------|----------|-------------------|-------------------|
+| GPT-4 Turbo | 94.3% | 91.2% | 87.5% |
+| Claude 3 Opus | 93.8% | 92.4% | 89.1% |
+| Gemini 1.5 Pro | 92.1% | 90.8% | 85.3% |
+| LLaMA-3 70B | 87.2% | 84.1% | 78.4% |
+
+3.3 Hypothesis Generation
+"LLMs generated novel, testable hypotheses in 78% of evaluated papers, with 23% leading to successful experimental validation" - Section 3.3
+
+Expert blind review rated LLM-generated hypotheses:
+- Novelty: 4.1/5.0 (comparable to human-generated: 4.3/5.0)
+- Testability: 4.4/5.0 (higher than human-generated: 4.0/5.0)
+- Scientific rigor: 3.9/5.0 (slightly lower than human: 4.5/5.0)
+
+3.4 Cross-Domain Discovery
+Most exciting finding: LLMs identified cross-domain connections missed by human experts in 34% of cases. Example: An LLM connected protein folding dynamics research with quantum error correction algorithms, inspiring a novel quantum-inspired protein structure prediction approach.
 
 4. Discussion
-"The integration of attention mechanisms with deep learning models significantly improves interpretability without sacrificing accuracy" (Section 4.2). Our analysis reveals that transformer-based models show promise but require substantial computational resources.
 
-Key challenges identified:
-- Adversarial robustness: Models vulnerable to adversarial perturbations
-- Real-time processing: Deep models struggle with 10Gbps traffic speeds
-- Explainability: Black-box nature limits adoption in critical infrastructure
+4.1 Transformative Potential
+"The integration of LLMs into the scientific workflow represents a paradigm shift comparable to the introduction of electronic databases in the 1990s" - Section 4.1
+
+Key benefits observed:
+- Democratization of access to cutting-edge research synthesis
+- Reduction of cognitive load on researchers
+- Acceleration of interdisciplinary discovery
+
+4.2 Limitations and Challenges
+- Hallucination risk: LLMs occasionally generate plausible but incorrect claims (5.7% error rate)
+- Citation accuracy: Only 82% of LLM-generated citations were verified as accurate
+- Bias propagation: Models may amplify existing biases in training data
+- Reproducibility: Stochastic outputs complicate exact reproduction
+
+4.3 Responsible AI in Science
+We propose the FAIR-AI framework for responsible use:
+- Findability: Clear attribution of AI-assisted contributions
+- Accountability: Human verification of AI-generated claims
+- Integrity: Disclosure of AI tools used in research
+- Reproducibility: Logging of prompts and model versions
 
 5. Conclusion
-Deep learning has revolutionized network intrusion detection. Hybrid architectures combining CNNs with attention mechanisms represent the current state-of-the-art. Future work should focus on adversarial robustness and efficient real-time processing.
+Large Language Models have emerged as powerful tools for accelerating scientific discovery. Our comprehensive evaluation demonstrates that leading LLMs can accurately summarize research (94.3% accuracy), generate valuable hypotheses (45% quality improvement), and identify novel cross-domain connections. However, responsible deployment requires human oversight to mitigate hallucination risks and ensure scientific integrity. We release PRISM-Bench as a community resource for evaluating AI research assistants.
 
 References
-[1] Zhang et al. (2023). Attention-Based Intrusion Detection. IEEE TIFS.
-[2] Kumar et al. (2022). Deep Learning for Cybersecurity. ACM Computing Surveys.
-[3] Wang et al. (2024). Transformer Networks for Network Security. NDSS.
-[4] Liu et al. (2023). Adversarial Attacks on NIDS. USENIX Security.
-[5] Chen et al. (2022). Real-time Deep Learning IDS. IEEE TDSC.`,
+[1] Brown et al. (2020). Language Models are Few-Shot Learners. NeurIPS.
+[2] Bubeck et al. (2023). Sparks of AGI: GPT-4 Analysis. Microsoft Research.
+[3] Anthropic. (2024). Claude 3 Technical Report. Anthropic.
+[4] Team Gemini. (2024). Gemini 1.5 Technical Report. Google DeepMind.
+[5] Touvron et al. (2023). LLaMA 2: Open Foundation Models. Meta AI.
+[6] Boiko et al. (2023). Autonomous Scientific Research with LLMs. Nature.
+[7] AI4Science Team. (2024). The Impact of AI on Scientific Publishing. Science.
+[8] Jumper et al. (2021). AlphaFold 2: Protein Structure Prediction. Nature.`,
 };
 
 export const DEMO_CORE_ANALYSIS = {
-  title:
-    "Deep Learning for Network Intrusion Detection: A Comprehensive Survey",
-  authors: ["Research Team", "IEEE Publication"],
+  title: "Large Language Models for Scientific Discovery: A Comprehensive Analysis",
+  authors: ["AI Research Consortium", "Nature 2024"],
+  publicationYear: "2024",
   takeaways: [
-    "Hybrid CNN-LSTM architectures achieve 99.2% accuracy in network intrusion detection, outperforming traditional ML by 15%",
-    "Attention mechanisms significantly improve model interpretability without sacrificing detection accuracy",
-    "Real-time processing remains a key challenge - deep models struggle with 10Gbps traffic speeds",
-    "Adversarial robustness is critical - current models are vulnerable to adversarial perturbations",
-    "Transformer-based models show promise but require substantial computational resources",
+    "LLM-assisted research reduces literature review time by 73% while maintaining quality",
+    "GPT-4 achieves 94.3% accuracy in extracting and summarizing key findings from research papers",
+    "AI-generated hypotheses led to successful experimental validation in 23% of cases",
+    "LLMs identified cross-domain connections missed by human experts in 34% of papers",
+    "PRISM-Bench introduced as a new standard for evaluating AI research assistants",
   ],
   summary:
-    "This comprehensive survey reviews deep learning approaches for network intrusion detection systems (NIDS), analyzing over 150 papers from 2018-2024. The study categorizes methods into CNN-based, RNN-based, and hybrid architectures, evaluating their performance on benchmark datasets including NSL-KDD, CICIDS2017, and UNSW-NB15. The research reveals that hybrid models combining Convolutional Neural Networks with attention mechanisms achieve state-of-the-art performance with 99.2% accuracy, significantly outperforming traditional machine learning approaches. The survey identifies critical challenges in the field including adversarial attacks, class imbalance in datasets, and requirements for real-time processing at high network speeds. The findings provide valuable insights for researchers and practitioners developing next-generation intrusion detection systems.",
+    "This groundbreaking study evaluates Large Language Models (GPT-4, Claude 3, Gemini 1.5, LLaMA-3) for accelerating scientific discovery across 500+ research papers in biology, chemistry, physics, and materials science. The research demonstrates that LLM-assisted review reduces research time by 73% while maintaining quality, with GPT-4 achieving 94.3% accuracy in factual extraction. Remarkably, LLMs generated novel hypotheses that led to successful experimental validation in 23% of cases, and identified valuable cross-domain connections missed by human experts in 34% of papers. The study introduces PRISM-Bench, a comprehensive benchmark for AI research assistants, and proposes the FAIR-AI framework for responsible AI use in science. These findings herald a transformative shift in scientific research methodology.",
   problemStatement:
-    "Traditional signature-based intrusion detection systems fail to detect zero-day attacks, while anomaly-based systems suffer from high false positive rates. The exponential growth of network traffic has made manual intrusion detection impractical, necessitating automated deep learning solutions that can learn complex patterns from network traffic data.",
+    "The exponential growth of scientific literature—with over 5 million papers published annually—has created an unprecedented challenge for researchers. No human can comprehensively review their field, leading to missed discoveries, redundant research, and slower scientific progress. Traditional literature review methods are time-consuming, incomplete, and prone to bias toward familiar sources.",
   methodology:
-    "The study follows a systematic literature review using PRISMA guidelines. The researchers searched IEEE Xplore, ACM Digital Library, and Google Scholar using specific keywords related to deep learning and intrusion detection. After screening 892 papers, 156 studies meeting inclusion criteria were analyzed. The methodology includes evaluation on benchmark datasets (CICIDS2017, NSL-KDD, UNSW-NB15) with comprehensive data preprocessing including min-max normalization, one-hot encoding, and SMOTE oversampling for class imbalance.",
+    "The study curated 500 peer-reviewed papers from Nature, Science, Cell, and Physical Review Letters (2020-2024), stratified across biology (150 papers), chemistry (120), physics (130), and interdisciplinary research (100). The authors developed PRISM-Bench, a novel evaluation framework measuring factual accuracy, comprehensiveness, critical analysis, and hypothesis quality. Five leading LLMs were compared: GPT-4 Turbo (128K context), Claude 3 Opus (200K), Gemini 1.5 Pro (1M), LLaMA-3 70B, and Mistral Large. Expert blind reviews validated AI-generated outputs against human baselines.",
   keyFindings: [
     {
-      finding:
-        "Hybrid CNN-LSTM architectures achieve the highest detection accuracy at 99.2% with 98.8% F1-score",
-      evidence:
-        '"Hybrid CNN-LSTM: 99.2% accuracy, 98.8% F1-score" - Results Section',
+      finding: "LLM-assisted literature review reduces research time by 73% (8.2 hours to 2.2 hours per paper)",
+      evidence: '"Traditional manual review: 8.2 hours per paper; LLM-assisted review: 2.2 hours per paper (73% reduction)" - Section 3.1',
     },
     {
-      finding:
-        "Attention mechanisms improve interpretability while maintaining high accuracy",
-      evidence:
-        '"The integration of attention mechanisms with deep learning models significantly improves interpretability without sacrificing accuracy" - Section 4.2',
+      finding: "GPT-4 Turbo achieves 94.3% factual accuracy on the PRISM-Bench evaluation",
+      evidence: '"GPT-4 Turbo | 94.3% | 91.2% | 87.5%" - Table 1, Section 3.2',
     },
     {
-      finding:
-        "Deep learning models outperform traditional ML by 15% in accuracy",
-      evidence:
-        '"Our findings reveal that hybrid models combining CNNs with attention mechanisms achieve 99.2% accuracy, outperforming traditional machine learning by 15%" - Abstract',
+      finding: "LLM-generated hypotheses are more testable than human-generated ones (4.4 vs 4.0 on 5-point scale)",
+      evidence: '"Testability: 4.4/5.0 (higher than human-generated: 4.0/5.0)" - Section 3.3',
     },
     {
-      finding:
-        "Feature selection using correlation analysis reduces dimensionality by 40%",
-      evidence:
-        '"Feature selection using correlation analysis reduces dimensionality by 40%" - Section 2.1',
+      finding: "Cross-domain discovery: LLMs identified connections missed by human experts in 34% of cases",
+      evidence: '"LLMs identified cross-domain connections missed by human experts in 34% of cases" - Section 3.4',
     },
     {
-      finding:
-        "Current models face challenges with adversarial robustness and real-time processing",
-      evidence:
-        '"Models vulnerable to adversarial perturbations" and "Deep models struggle with 10Gbps traffic speeds" - Section 4',
+      finding: "23% of AI-generated hypotheses led to successful experimental validation",
+      evidence: '"LLMs generated novel, testable hypotheses in 78% of evaluated papers, with 23% leading to successful experimental validation" - Section 3.3',
+    },
+    {
+      finding: "Claude 3 Opus achieved the highest critical analysis score (89.1%)",
+      evidence: '"Claude 3 Opus | 93.8% | 92.4% | 89.1%" - Table 1, Section 3.2',
     },
   ],
 };
@@ -105,73 +149,62 @@ export const DEMO_CORE_ANALYSIS = {
 export const DEMO_ADVANCED_ANALYSIS = {
   strengths: [
     {
-      point:
-        "Comprehensive scope covering 156 papers using rigorous PRISMA methodology",
-      evidence:
-        '"We conducted a systematic literature review following PRISMA guidelines... we included 156 studies meeting our inclusion criteria" - Section 2',
+      point: "Unprecedented scale: 500+ papers across 4 major scientific domains",
+      evidence: '"We curated a diverse corpus of 500 peer-reviewed papers from Nature, Science, Cell, and Physical Review Letters" - Section 2.1',
     },
     {
-      point:
-        "Thorough comparison across multiple benchmark datasets ensuring reproducibility",
-      evidence:
-        '"evaluating performance on benchmark datasets including NSL-KDD, CICIDS2017, and UNSW-NB15" - Abstract',
+      point: "Novel benchmark: Introduction of PRISM-Bench for standardized evaluation",
+      evidence: '"We developed PRISM-Bench with metrics: Factual Accuracy, Comprehensiveness, Critical Analysis, Hypothesis Quality" - Section 2.2',
     },
     {
-      point:
-        "Novel hybrid architecture achieving state-of-the-art 99.2% detection accuracy",
-      evidence: '"Hybrid CNN-LSTM: 99.2% accuracy, 98.8% F1-score" - Section 3',
+      point: "Practical impact: 73% reduction in literature review time with maintained quality",
+      evidence: '"Quality scores remained comparable (4.2 vs 4.1 on 5-point scale)" - Section 3.1',
     },
     {
-      point:
-        "Detailed preprocessing pipeline addressing common data challenges",
-      evidence:
-        '"We normalize numerical features using min-max scaling, encode categorical features using one-hot encoding, and handle class imbalance using SMOTE oversampling" - Section 2.1',
+      point: "Rigorous methodology: Expert blind reviews for hypothesis validation",
+      evidence: '"Expert blind review rated LLM-generated hypotheses" - Section 3.3',
+    },
+    {
+      point: "Responsible AI focus: Introduction of FAIR-AI framework for ethical use",
+      evidence: '"We propose the FAIR-AI framework: Findability, Accountability, Integrity, Reproducibility" - Section 4.3',
     },
   ],
   weaknesses: [
     {
-      point:
-        "Limited analysis of computational cost and deployment considerations",
-      evidence:
-        '"transformer-based models show promise but require substantial computational resources" - Section 4',
+      point: "Hallucination risk not fully mitigated (5.7% error rate)",
+      evidence: '"Hallucination risk: LLMs occasionally generate plausible but incorrect claims (5.7% error rate)" - Section 4.2',
     },
     {
-      point:
-        "Insufficient coverage of privacy-preserving techniques for sensitive network data",
-      evidence:
-        "The survey does not address federated learning or differential privacy approaches",
+      point: "Citation accuracy concerns (only 82% verified)",
+      evidence: '"Citation accuracy: Only 82% of LLM-generated citations were verified as accurate" - Section 4.2',
     },
     {
-      point:
-        "Evaluation limited to well-known datasets, may not reflect real-world network diversity",
-      evidence:
-        'Evaluation focused on "NSL-KDD, CICIDS2017, and UNSW-NB15" without testing on production networks',
+      point: "Limited evaluation of open-source models compared to proprietary ones",
+      evidence: '"LLaMA-3 70B | 87.2% | 84.1% | 78.4%" shows significant gap vs proprietary models - Section 3.2',
+    },
+    {
+      point: "Reproducibility challenges due to stochastic model outputs",
+      evidence: '"Reproducibility: Stochastic outputs complicate exact reproduction" - Section 4.2',
     },
   ],
   hypotheses: [
     {
-      hypothesis:
-        "Federated learning-based intrusion detection could achieve comparable accuracy while preserving data privacy across distributed networks",
+      hypothesis: "Fine-tuning LLMs on domain-specific scientific corpora could reduce hallucination rates below 1%",
       experimentalDesign:
-        "1. Deploy federated learning framework across 5+ network nodes\n2. Train local models on each node's traffic data\n3. Aggregate model updates using secure aggregation\n4. Compare accuracy, privacy guarantees, and communication overhead vs. centralized approach\n5. Evaluate on CICIDS2017 with data partitioned across nodes",
-      expectedOutcome:
-        "Accuracy within 2-3% of centralized training while protecting raw traffic data from central collection",
+        "1. Curate domain-specific training datasets from verified sources\n2. Fine-tune base models using LoRA/QLoRA techniques\n3. Evaluate on PRISM-Bench factual accuracy metrics\n4. Compare hallucination rates with base models\n5. Test generalization across scientific domains",
+      expectedOutcome: "Reduction of hallucination rate from 5.7% to <1% while maintaining 94%+ accuracy",
     },
     {
-      hypothesis:
-        "Graph Neural Networks (GNNs) modeling network topology could improve detection of coordinated multi-stage attacks",
+      hypothesis: "Multi-agent LLM systems with verification loops could achieve near-perfect citation accuracy",
       experimentalDesign:
-        "1. Construct network flow graphs with hosts as nodes and connections as edges\n2. Design GNN architecture to learn attack patterns across topology\n3. Train on datasets with labeled multi-stage attacks (APT scenarios)\n4. Compare with flow-based methods on detecting lateral movement\n5. Measure precision/recall on advanced persistent threat detection",
-      expectedOutcome:
-        "15-20% improvement in detecting coordinated attacks compared to individual flow analysis",
+        "1. Design multi-agent architecture: Generator, Verifier, Corrector agents\n2. Implement real-time citation verification against databases\n3. Create feedback loop for self-correction\n4. Evaluate on citation accuracy benchmark\n5. Measure latency vs accuracy tradeoffs",
+      expectedOutcome: "Citation accuracy improvement from 82% to 98%+ with acceptable latency overhead",
     },
     {
-      hypothesis:
-        "Adversarial training with generated attack variations could significantly improve model robustness against evasion attacks",
+      hypothesis: "Retrieval-Augmented Generation (RAG) with specialized scientific databases could unlock domain-expert-level analysis",
       experimentalDesign:
-        "1. Generate adversarial examples using FGSM, PGD, and C&W attacks\n2. Augment training data with adversarial samples\n3. Train robust models with adversarial training objectives\n4. Evaluate detection accuracy under various attack perturbation budgets\n5. Test generalization to unseen attack variations",
-      expectedOutcome:
-        "Maintain >95% accuracy under adversarial perturbations while baseline models drop to <70%",
+        "1. Build vector databases from PubMed, arXiv, and patent databases\n2. Implement RAG pipeline with semantic search\n3. Compare with base LLM on domain-specific tasks\n4. Evaluate using expert panel blind review\n5. Measure improvement in technical accuracy and depth",
+      expectedOutcome: "Domain expertise scores matching human experts (4.5+ on 5-point scale)",
     },
   ],
 };
@@ -179,29 +212,34 @@ export const DEMO_ADVANCED_ANALYSIS = {
 export const DEMO_REFERENCES = {
   references: [
     {
-      apa: "Zhang, Y., Chen, X., & Wang, L. (2023). Attention-Based Intrusion Detection Using Deep Neural Networks. IEEE Transactions on Information Forensics and Security, 18(4), 1234-1248.",
+      apa: "Brown, T., Mann, B., Ryder, N., Subbiah, M., et al. (2020). Language Models are Few-Shot Learners. Advances in Neural Information Processing Systems, 33, 1877-1901.",
       bibtex:
-        "@article{zhang2023attention,\n  title={Attention-Based Intrusion Detection Using Deep Neural Networks},\n  author={Zhang, Yiming and Chen, Xiaoming and Wang, Lei},\n  journal={IEEE Transactions on Information Forensics and Security},\n  volume={18},\n  number={4},\n  pages={1234--1248},\n  year={2023}\n}",
+        "@article{brown2020language,\n  title={Language Models are Few-Shot Learners},\n  author={Brown, Tom and Mann, Benjamin and Ryder, Nick and Subbiah, Melanie and others},\n  journal={Advances in Neural Information Processing Systems},\n  volume={33},\n  pages={1877--1901},\n  year={2020}\n}",
     },
     {
-      apa: "Kumar, R., Singh, A., & Patel, M. (2022). Deep Learning for Cybersecurity: A Comprehensive Review. ACM Computing Surveys, 55(3), 1-38.",
+      apa: "Bubeck, S., Chandrasekaran, V., Eldan, R., et al. (2023). Sparks of Artificial General Intelligence: Early Experiments with GPT-4. Microsoft Research.",
       bibtex:
-        "@article{kumar2022deep,\n  title={Deep Learning for Cybersecurity: A Comprehensive Review},\n  author={Kumar, Rajesh and Singh, Amit and Patel, Meera},\n  journal={ACM Computing Surveys},\n  volume={55},\n  number={3},\n  pages={1--38},\n  year={2022}\n}",
+        "@article{bubeck2023sparks,\n  title={Sparks of Artificial General Intelligence: Early Experiments with GPT-4},\n  author={Bubeck, S{\\'{e}}bastien and Chandrasekaran, Varun and Eldan, Ronen and others},\n  journal={Microsoft Research},\n  year={2023}\n}",
     },
     {
-      apa: "Wang, H., Liu, J., & Zhang, Q. (2024). Transformer Networks for Network Security: Architecture and Applications. Network and Distributed System Security Symposium (NDSS).",
+      apa: "Anthropic. (2024). The Claude 3 Model Family: A New Standard for AI Assistants. Anthropic Technical Report.",
       bibtex:
-        "@inproceedings{wang2024transformer,\n  title={Transformer Networks for Network Security: Architecture and Applications},\n  author={Wang, Hui and Liu, Jing and Zhang, Qian},\n  booktitle={Network and Distributed System Security Symposium (NDSS)},\n  year={2024}\n}",
+        "@techreport{anthropic2024claude,\n  title={The Claude 3 Model Family: A New Standard for AI Assistants},\n  author={Anthropic},\n  institution={Anthropic},\n  year={2024}\n}",
     },
     {
-      apa: "Liu, S., Chen, Y., & Wu, T. (2023). Adversarial Attacks on Network Intrusion Detection Systems. USENIX Security Symposium, 2023.",
+      apa: "Team Gemini. (2024). Gemini 1.5: Unlocking Multimodal Understanding Across Millions of Tokens. Google DeepMind.",
       bibtex:
-        "@inproceedings{liu2023adversarial,\n  title={Adversarial Attacks on Network Intrusion Detection Systems},\n  author={Liu, Sheng and Chen, Yan and Wu, Ting},\n  booktitle={USENIX Security Symposium},\n  year={2023}\n}",
+        "@techreport{gemini2024,\n  title={Gemini 1.5: Unlocking Multimodal Understanding Across Millions of Tokens},\n  author={Team Gemini},\n  institution={Google DeepMind},\n  year={2024}\n}",
     },
     {
-      apa: "Chen, B., Yang, F., & Li, X. (2022). Real-time Deep Learning IDS for High-Speed Networks. IEEE Transactions on Dependable and Secure Computing, 19(5), 3001-3015.",
+      apa: "Touvron, H., Martin, L., Stone, K., et al. (2023). LLaMA 2: Open Foundation and Fine-Tuned Chat Models. Meta AI.",
       bibtex:
-        "@article{chen2022realtime,\n  title={Real-time Deep Learning IDS for High-Speed Networks},\n  author={Chen, Bo and Yang, Fei and Li, Xin},\n  journal={IEEE Transactions on Dependable and Secure Computing},\n  volume={19},\n  number={5},\n  pages={3001--3015},\n  year={2022}\n}",
+        "@article{touvron2023llama,\n  title={LLaMA 2: Open Foundation and Fine-Tuned Chat Models},\n  author={Touvron, Hugo and Martin, Louis and Stone, Kevin and others},\n  journal={Meta AI},\n  year={2023}\n}",
+    },
+    {
+      apa: "Boiko, D. A., MacKnight, R., Kline, B., & Gomes, G. (2023). Autonomous scientific research capabilities of large language models. Nature, 624(7990), 570-578.",
+      bibtex:
+        "@article{boiko2023autonomous,\n  title={Autonomous scientific research capabilities of large language models},\n  author={Boiko, Daniil A and MacKnight, Robert and Kline, Ben and Gomes, Gerbrand},\n  journal={Nature},\n  volume={624},\n  number={7990},\n  pages={570--578},\n  year={2023}\n}",
     },
   ],
 };
@@ -209,54 +247,44 @@ export const DEMO_REFERENCES = {
 export const DEMO_GLOSSARY = {
   terms: [
     {
-      term: "NIDS",
-      definition:
-        "Network Intrusion Detection System - a security mechanism that monitors network traffic for suspicious activity and policy violations.",
+      term: "LLM",
+      definition: "Large Language Model - an AI model trained on massive text corpora capable of understanding and generating human-like text.",
     },
     {
-      term: "Zero-day Attack",
-      definition:
-        "An attack exploiting a previously unknown vulnerability, making it undetectable by signature-based systems.",
+      term: "GPT-4",
+      definition: "Generative Pre-trained Transformer 4 - OpenAI's flagship multimodal model with 128K context window and advanced reasoning.",
     },
     {
-      term: "CNN",
-      definition:
-        "Convolutional Neural Network - a deep learning architecture that excels at extracting spatial features from structured data.",
+      term: "Claude 3",
+      definition: "Anthropic's latest AI assistant family (Haiku, Sonnet, Opus) with 200K context and strong analytical capabilities.",
     },
     {
-      term: "LSTM",
-      definition:
-        "Long Short-Term Memory - a recurrent neural network architecture capable of learning long-term dependencies in sequential data.",
+      term: "Context Window",
+      definition: "The maximum amount of text an LLM can process in a single interaction, measured in tokens (roughly 0.75 words per token).",
     },
     {
-      term: "SMOTE",
-      definition:
-        "Synthetic Minority Over-sampling Technique - a method to address class imbalance by generating synthetic samples of the minority class.",
+      term: "Hallucination",
+      definition: "When an AI generates plausible but factually incorrect or fabricated information with apparent confidence.",
     },
     {
-      term: "F1-Score",
-      definition:
-        "A harmonic mean of precision and recall, providing a balanced measure of classification performance.",
+      term: "RAG",
+      definition: "Retrieval-Augmented Generation - a technique that enhances LLM responses by retrieving relevant information from external databases.",
     },
     {
-      term: "Autoencoder",
-      definition:
-        "A neural network that learns to compress data into a lower-dimensional representation and reconstruct it, useful for anomaly detection.",
+      term: "PRISM-Bench",
+      definition: "A benchmark introduced in this study for evaluating AI research assistants on accuracy, comprehensiveness, and hypothesis quality.",
     },
     {
-      term: "Adversarial Attack",
-      definition:
-        "Malicious inputs crafted to fool machine learning models while appearing normal to humans.",
+      term: "FAIR-AI",
+      definition: "Framework for responsible AI use: Findability, Accountability, Integrity, Reproducibility.",
     },
     {
-      term: "CICIDS2017",
-      definition:
-        "Canadian Institute for Cybersecurity Intrusion Detection Systems 2017 - a benchmark dataset for evaluating NIDS.",
+      term: "Fine-tuning",
+      definition: "The process of further training a pre-trained model on domain-specific data to improve performance on specific tasks.",
     },
     {
-      term: "Attention Mechanism",
-      definition:
-        "A neural network component that allows the model to focus on relevant parts of the input, improving interpretability.",
+      term: "Zero-shot Learning",
+      definition: "The ability of a model to perform tasks without specific training examples, relying on general knowledge.",
     },
   ],
 };
@@ -264,115 +292,117 @@ export const DEMO_GLOSSARY = {
 export const DEMO_KNOWLEDGE_GRAPH = {
   nodes: [
     // Main central node
-    { id: "1", label: "Deep Learning for NIDS", type: "main", group: 1, val: 35, glow: true },
+    { id: "1", label: "LLMs for Scientific Discovery", type: "main", group: 1, val: 40, glow: true },
     
-    // Methods cluster
-    { id: "2", label: "CNN", type: "method", group: 2, val: 18 },
-    { id: "3", label: "LSTM/RNN", type: "method", group: 2, val: 18 },
-    { id: "4", label: "Attention Mechanism", type: "method", group: 2, val: 16 },
-    { id: "5", label: "Transformer", type: "method", group: 2, val: 14 },
-    { id: "6", label: "Autoencoder", type: "method", group: 2, val: 14 },
+    // Models cluster
+    { id: "2", label: "GPT-4 Turbo", type: "method", group: 2, val: 22, glow: true },
+    { id: "3", label: "Claude 3 Opus", type: "method", group: 2, val: 20 },
+    { id: "4", label: "Gemini 1.5 Pro", type: "method", group: 2, val: 18 },
+    { id: "5", label: "LLaMA-3 70B", type: "method", group: 2, val: 14 },
+    { id: "6", label: "Mistral Large", type: "method", group: 2, val: 14 },
     
     // Results cluster
-    { id: "7", label: "99.2% Accuracy", type: "result", group: 8, val: 20, glow: true },
-    { id: "8", label: "98.8% F1-Score", type: "result", group: 8, val: 16 },
-    { id: "9", label: "15% Improvement", type: "result", group: 8, val: 14 },
+    { id: "7", label: "94.3% Accuracy", type: "result", group: 8, val: 24, glow: true },
+    { id: "8", label: "73% Time Reduction", type: "result", group: 8, val: 22, glow: true },
+    { id: "9", label: "45% Quality Boost", type: "result", group: 8, val: 18 },
+    { id: "10", label: "23% Validation Rate", type: "result", group: 8, val: 16 },
     
-    // Datasets cluster
-    { id: "10", label: "CICIDS2017", type: "dataset", group: 5, val: 12 },
-    { id: "11", label: "NSL-KDD", type: "dataset", group: 5, val: 12 },
-    { id: "12", label: "UNSW-NB15", type: "dataset", group: 5, val: 12 },
+    // Domains cluster
+    { id: "11", label: "Biology/Medicine", type: "dataset", group: 5, val: 14 },
+    { id: "12", label: "Chemistry", type: "dataset", group: 5, val: 12 },
+    { id: "13", label: "Physics", type: "dataset", group: 5, val: 12 },
+    { id: "14", label: "Interdisciplinary", type: "dataset", group: 5, val: 10 },
     
     // Challenges cluster
-    { id: "13", label: "Adversarial Attacks", type: "challenge", group: 6, val: 14 },
-    { id: "14", label: "Real-time Processing", type: "challenge", group: 6, val: 14 },
-    { id: "15", label: "Explainability", type: "challenge", group: 6, val: 12 },
-    { id: "16", label: "Class Imbalance", type: "challenge", group: 6, val: 12 },
+    { id: "15", label: "Hallucination Risk", type: "challenge", group: 6, val: 16 },
+    { id: "16", label: "Citation Accuracy", type: "challenge", group: 6, val: 14 },
+    { id: "17", label: "Reproducibility", type: "challenge", group: 6, val: 12 },
+    { id: "18", label: "Bias Propagation", type: "challenge", group: 6, val: 12 },
     
-    // Solutions cluster
-    { id: "17", label: "Hybrid CNN-LSTM", type: "solution", group: 7, val: 22, glow: true },
-    { id: "18", label: "SMOTE Oversampling", type: "technique", group: 9, val: 10 },
-    { id: "19", label: "Min-Max Scaling", type: "technique", group: 9, val: 8 },
+    // Framework nodes
+    { id: "19", label: "PRISM-Bench", type: "solution", group: 7, val: 20, glow: true },
+    { id: "20", label: "FAIR-AI Framework", type: "solution", group: 7, val: 18 },
     
-    // Applications cluster
-    { id: "20", label: "Intrusion Detection", type: "finding", group: 3, val: 18 },
-    { id: "21", label: "Network Security", type: "finding", group: 3, val: 16 },
-    { id: "22", label: "Anomaly Detection", type: "finding", group: 3, val: 14 },
+    // Capabilities cluster
+    { id: "21", label: "Literature Review", type: "finding", group: 3, val: 18 },
+    { id: "22", label: "Hypothesis Generation", type: "finding", group: 3, val: 16 },
+    { id: "23", label: "Cross-Domain Discovery", type: "finding", group: 3, val: 18, glow: true },
+    { id: "24", label: "Critical Analysis", type: "finding", group: 3, val: 14 },
     
-    // Concepts cluster
-    { id: "23", label: "Feature Extraction", type: "concept", group: 9, val: 12 },
-    { id: "24", label: "Spatial Features", type: "concept", group: 9, val: 10 },
-    { id: "25", label: "Temporal Patterns", type: "concept", group: 9, val: 10 },
+    // Technical features
+    { id: "25", label: "128K Context", type: "concept", group: 9, val: 12 },
+    { id: "26", label: "Multimodal", type: "concept", group: 9, val: 12 },
   ],
   links: [
-    // Core connections to methods
-    { source: "1", target: "2", relationship: "uses" },
-    { source: "1", target: "3", relationship: "uses" },
-    { source: "1", target: "4", relationship: "incorporates" },
-    { source: "1", target: "5", relationship: "explores" },
-    { source: "1", target: "6", relationship: "applies" },
+    // Core connections to models
+    { source: "1", target: "2", relationship: "evaluated" },
+    { source: "1", target: "3", relationship: "evaluated" },
+    { source: "1", target: "4", relationship: "evaluated" },
+    { source: "1", target: "5", relationship: "evaluated" },
+    { source: "1", target: "6", relationship: "evaluated" },
     
-    // Methods to hybrid solution
-    { source: "2", target: "17", relationship: "component of" },
-    { source: "3", target: "17", relationship: "component of" },
-    { source: "4", target: "17", relationship: "enhances" },
+    // Models to results
+    { source: "2", target: "7", relationship: "achieves" },
+    { source: "2", target: "8", relationship: "enables" },
+    { source: "3", target: "24", relationship: "excels at" },
     
-    // Hybrid to results
-    { source: "17", target: "7", relationship: "achieves" },
-    { source: "17", target: "8", relationship: "achieves" },
-    { source: "17", target: "9", relationship: "demonstrates" },
+    // Core to capabilities
+    { source: "1", target: "21", relationship: "accelerates" },
+    { source: "1", target: "22", relationship: "enables" },
+    { source: "1", target: "23", relationship: "discovers" },
+    { source: "1", target: "24", relationship: "performs" },
     
-    // Core to applications
-    { source: "1", target: "20", relationship: "applied to" },
-    { source: "1", target: "21", relationship: "enables" },
-    { source: "20", target: "22", relationship: "includes" },
+    // Capabilities to results
+    { source: "21", target: "8", relationship: "achieves" },
+    { source: "22", target: "9", relationship: "shows" },
+    { source: "22", target: "10", relationship: "validated by" },
+    
+    // Core to domains
+    { source: "1", target: "11", relationship: "applied to" },
+    { source: "1", target: "12", relationship: "applied to" },
+    { source: "1", target: "13", relationship: "applied to" },
+    { source: "1", target: "14", relationship: "applied to" },
     
     // Core to challenges
-    { source: "1", target: "13", relationship: "faces" },
-    { source: "1", target: "14", relationship: "faces" },
-    { source: "1", target: "15", relationship: "lacks" },
-    { source: "1", target: "16", relationship: "addresses" },
+    { source: "1", target: "15", relationship: "faces" },
+    { source: "1", target: "16", relationship: "faces" },
+    { source: "1", target: "17", relationship: "faces" },
+    { source: "1", target: "18", relationship: "faces" },
     
-    // Challenge solutions
-    { source: "16", target: "18", relationship: "solved by" },
-    { source: "18", target: "19", relationship: "combined with" },
+    // Frameworks address challenges
+    { source: "19", target: "7", relationship: "measures" },
+    { source: "20", target: "15", relationship: "mitigates" },
+    { source: "20", target: "17", relationship: "addresses" },
     
-    // Datasets connections
-    { source: "20", target: "10", relationship: "evaluated on" },
-    { source: "20", target: "11", relationship: "evaluated on" },
-    { source: "20", target: "12", relationship: "evaluated on" },
+    // Model features
+    { source: "2", target: "25", relationship: "features" },
+    { source: "2", target: "26", relationship: "supports" },
+    { source: "4", target: "25", relationship: "extends to 1M" },
     
-    // Feature concepts
-    { source: "2", target: "24", relationship: "extracts" },
-    { source: "3", target: "25", relationship: "captures" },
-    { source: "23", target: "24", relationship: "includes" },
-    { source: "23", target: "25", relationship: "includes" },
-    
-    // Cross-connections for visual interest
-    { source: "4", target: "15", relationship: "improves" },
-    { source: "7", target: "21", relationship: "validates" },
+    // Cross-connections
+    { source: "23", target: "14", relationship: "enables" },
+    { source: "22", target: "23", relationship: "leads to" },
   ],
 };
 
 export const DEMO_CHAT_MESSAGES = [
   {
     role: "user",
-    content: "What is the main contribution of this paper?",
+    content: "What makes this paper significant for researchers?",
   },
   {
     role: "assistant",
     content:
-      "The main contribution of this survey paper is a **comprehensive analysis of deep learning approaches for network intrusion detection**, covering 156 papers from 2018-2024. The key findings include:\n\n1. **Hybrid CNN-LSTM architectures** achieve state-of-the-art performance with **99.2% accuracy** and 98.8% F1-score\n\n2. **Attention mechanisms** significantly improve model interpretability without sacrificing detection accuracy\n\n3. The survey identifies critical **open challenges**:\n   - Adversarial robustness vulnerabilities\n   - Real-time processing at 10Gbps speeds\n   - Explainability requirements for critical infrastructure\n\nThis work provides valuable guidance for researchers and practitioners developing next-generation intrusion detection systems.",
+      "This paper is significant for several compelling reasons:\n\n## 🔬 **Transformative Impact**\n\n1. **73% Time Savings**: The study proves LLMs can reduce literature review time from 8.2 hours to 2.2 hours per paper without quality loss—a game-changer for researchers drowning in publications.\n\n2. **Validated Discoveries**: An remarkable **23% of AI-generated hypotheses led to successful experimental validation**, demonstrating LLMs can contribute meaningfully to the scientific method.\n\n3. **Cross-Domain Insights**: LLMs identified connections missed by human experts in **34% of cases**—potentially accelerating interdisciplinary breakthroughs.\n\n## 📊 **Rigorous Methodology**\n\n- **500+ papers** across 4 major scientific domains\n- **5 state-of-the-art models** systematically compared\n- **Expert blind reviews** for unbiased evaluation\n- **PRISM-Bench**: A new community standard for AI research assistants\n\n## ⚖️ **Responsible AI Focus**\n\nThe FAIR-AI framework addresses critical concerns:\n- Transparency in AI use\n- Human verification of claims\n- Reproducibility standards\n\nThis isn't just about speed—it's about augmenting human intelligence to tackle research challenges at unprecedented scale.",
   },
   {
     role: "user",
-    content:
-      "How does the hybrid model compare to traditional machine learning?",
+    content: "How does GPT-4 compare to Claude 3 in this study?",
   },
   {
     role: "assistant",
     content:
-      "According to the paper, hybrid deep learning models significantly outperform traditional machine learning:\n\n| Approach | Accuracy | F1-Score |\n|----------|----------|----------|\n| Traditional ML | ~84% | ~82% |\n| CNN | 97.8% | 96.2% |\n| LSTM | 98.1% | 97.5% |\n| **Hybrid CNN-LSTM** | **99.2%** | **98.8%** |\n\n**Key advantages of the hybrid approach:**\n\n1. **15% accuracy improvement** over traditional ML (as stated in the abstract)\n\n2. **Dual feature extraction**: CNNs capture spatial features from packet payloads while LSTMs capture temporal patterns in traffic flows\n\n3. **Better generalization**: The combination reduces overfitting to specific attack signatures\n\nThe trade-off is **computational cost** - training takes ~45 minutes on an NVIDIA RTX 3090, which may be prohibitive for resource-constrained environments.",
+      "Here's a detailed comparison based on the study's findings:\n\n| Metric | GPT-4 Turbo | Claude 3 Opus |\n|--------|-------------|---------------|\n| **Factual Accuracy** | **94.3%** ✓ | 93.8% |\n| **Comprehensiveness** | 91.2% | **92.4%** ✓ |\n| **Critical Analysis** | 87.5% | **89.1%** ✓ |\n| **Context Window** | 128K tokens | **200K tokens** ✓ |\n\n## 🏆 **Key Differences**\n\n**GPT-4 Turbo excels at:**\n- Pure factual accuracy (94.3% vs 93.8%)\n- Extracting precise numerical findings\n- Multimodal understanding (figures/charts)\n\n**Claude 3 Opus excels at:**\n- Critical analysis and identifying limitations (89.1%)\n- Comprehensive coverage of paper contents (92.4%)\n- Longer context handling (200K tokens)\n\n## 💡 **Practical Recommendation**\n\nThe study suggests using:\n- **GPT-4** for fact-extraction and summary tasks\n- **Claude 3** for critique generation and identifying research gaps\n- **Gemini 1.5 Pro** when processing extremely long documents (1M context)\n\nBoth are excellent choices—the differences are marginal. The 5.7% hallucination rate applies to all models, emphasizing the need for human verification regardless of choice.",
   },
 ];
 
@@ -380,63 +410,60 @@ export const DEMO_RELATED_QUERIES = {
   categorizedQueries: {
     similar: [
       {
-        query: "deep learning intrusion detection survey 2024",
-        reason: "Finds recent surveys on the same topic for comparison",
+        query: "GPT-4 scientific research applications 2024",
+        reason: "Finds recent studies on LLM applications in science",
       },
       {
-        query: "CNN LSTM network anomaly detection",
-        reason: "Targets papers using similar hybrid architectures",
+        query: "AI literature review automation evaluation",
+        reason: "Papers evaluating AI-assisted research workflows",
       },
       {
-        query: "machine learning NIDS benchmark comparison",
-        reason: "Identifies studies with comparative evaluations",
+        query: "Large language models hypothesis generation",
+        reason: "Studies on LLM capabilities for scientific ideation",
       },
     ],
     methodology: [
       {
-        query: "CICIDS2017 deep learning classification",
-        reason: "Papers using the same benchmark dataset",
+        query: "PRISM-Bench AI evaluation benchmark",
+        reason: "Papers using or extending the new benchmark",
       },
       {
-        query: "SMOTE class imbalance intrusion detection",
-        reason: "Studies addressing data imbalance similarly",
+        query: "LLM hallucination detection scientific text",
+        reason: "Methods for verifying AI-generated scientific claims",
       },
     ],
     evolution: [
       {
-        query: "network intrusion detection historical survey",
-        reason: "Traces the evolution of IDS techniques",
+        query: "history AI scientific discovery automation",
+        reason: "Traces the evolution of AI in research",
       },
       {
-        query: "signature-based vs anomaly-based IDS",
-        reason:
-          "Foundational comparison that motivated deep learning approaches",
+        query: "expert systems vs LLMs knowledge extraction",
+        reason: "Compares classical AI with modern LLM approaches",
       },
     ],
     contradictory: [
       {
-        query: "deep learning IDS limitations false positives",
-        reason: "Papers critiquing deep learning approaches in NIDS",
+        query: "LLM limitations scientific accuracy critique",
+        reason: "Papers questioning LLM reliability in science",
       },
       {
-        query: "traditional ML vs deep learning network security",
-        reason: "Studies favoring simpler approaches",
+        query: "human vs AI research quality comparison",
+        reason: "Studies favoring human-only research approaches",
       },
     ],
   },
   queries: [
-    "deep learning intrusion detection survey 2024",
-    "CNN LSTM network anomaly detection",
-    "machine learning NIDS benchmark comparison",
-    "CICIDS2017 deep learning classification",
-    "SMOTE class imbalance intrusion detection",
-    "network intrusion detection historical survey",
-    "signature-based vs anomaly-based IDS",
-    "deep learning IDS limitations false positives",
-    "traditional ML vs deep learning network security",
+    "GPT-4 scientific research applications 2024",
+    "AI literature review automation evaluation",
+    "Large language models hypothesis generation",
+    "PRISM-Bench AI evaluation benchmark",
+    "LLM hallucination detection scientific text",
+    "history AI scientific discovery automation",
+    "LLM limitations scientific accuracy critique",
   ],
   stats: {
-    totalQueries: 9,
+    totalQueries: 7,
     categories: 4,
     similar: 3,
     methodology: 2,
@@ -448,57 +475,57 @@ export const DEMO_RELATED_QUERIES = {
 export const DEMO_PRESENTATION = {
   slides: [
     {
-      title: "Deep Learning for Network Intrusion Detection",
+      title: "LLMs for Scientific Discovery",
       bullets: [
-        "Comprehensive Survey of 150+ Papers (2018-2024)",
-        "Focus: CNN, RNN, and Hybrid Architectures",
-        "Benchmark Evaluation: NSL-KDD, CICIDS2017, UNSW-NB15",
-        "Key Result: 99.2% Accuracy with Hybrid Models",
+        "Comprehensive evaluation of 5 leading AI models",
+        "500+ research papers across 4 scientific domains",
+        "Introducing PRISM-Bench: New evaluation standard",
+        "FAIR-AI Framework for responsible use",
       ],
     },
     {
-      title: "The Problem: Network Security Challenges",
+      title: "The Research Information Overload Problem",
       bullets: [
-        "Exponential growth of network traffic makes manual detection impractical",
-        "Signature-based systems fail to detect zero-day attacks",
-        "Anomaly-based systems suffer from high false positive rates",
-        "Need for automated deep learning solutions",
+        "5+ million papers published annually—impossible to review manually",
+        "Researchers spend 8+ hours per paper on literature review",
+        "Cross-domain discoveries often missed due to siloed reading",
+        "Urgent need for AI-assisted research acceleration",
       ],
     },
     {
-      title: "Methodology: Systematic Literature Review",
+      title: "Methodology: Rigorous Multi-Model Evaluation",
       bullets: [
-        "PRISMA guidelines for systematic review",
-        "Searched IEEE, ACM, and Google Scholar",
-        "Screened 892 papers → 156 studies included",
-        "Comprehensive data preprocessing pipeline",
+        "500 papers from Nature, Science, Cell, Physical Review Letters",
+        "5 models tested: GPT-4, Claude 3, Gemini 1.5, LLaMA-3, Mistral",
+        "Expert blind reviews for unbiased quality assessment",
+        "PRISM-Bench: Accuracy, Comprehensiveness, Critical Analysis, Hypothesis Quality",
       ],
     },
     {
-      title: "Deep Learning Architectures Analyzed",
+      title: "Key Results: Transformative Potential",
       bullets: [
-        "CNNs: Extract spatial features from packet payloads",
-        "RNNs/LSTMs: Capture temporal patterns in traffic flows",
-        "Autoencoders: Learn compact representations for anomaly detection",
-        "Hybrid CNN-LSTM: Combines spatial and temporal features",
+        "73% reduction in literature review time (8.2h → 2.2h)",
+        "94.3% factual accuracy (GPT-4 Turbo)",
+        "23% of AI hypotheses led to experimental validation",
+        "34% cross-domain connections missed by humans discovered",
       ],
     },
     {
-      title: "Key Results",
+      title: "Model Comparison: Who Leads?",
       bullets: [
-        "CNN models: 97.8% accuracy, 96.2% F1-score",
-        "LSTM models: 98.1% accuracy, 97.5% F1-score",
-        "Hybrid CNN-LSTM: 99.2% accuracy, 98.8% F1-score",
-        "15% improvement over traditional machine learning",
+        "GPT-4 Turbo: Best factual accuracy (94.3%)",
+        "Claude 3 Opus: Best critical analysis (89.1%)",
+        "Gemini 1.5 Pro: Largest context (1M tokens)",
+        "Open-source gap: LLaMA-3 at 87.2% (7% below GPT-4)",
       ],
     },
     {
-      title: "Challenges & Future Directions",
+      title: "Challenges & Responsible Use",
       bullets: [
-        "Adversarial Robustness: Models vulnerable to adversarial perturbations",
-        "Real-time Processing: Struggle with 10Gbps traffic speeds",
-        "Explainability: Black-box nature limits adoption",
-        "Future: Focus on robust, efficient, interpretable models",
+        "5.7% hallucination rate—human verification essential",
+        "82% citation accuracy—needs improvement",
+        "FAIR-AI Framework: Findability, Accountability, Integrity, Reproducibility",
+        "Future: Fine-tuning, RAG, multi-agent verification",
       ],
     },
   ],

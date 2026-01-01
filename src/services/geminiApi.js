@@ -16,8 +16,8 @@ const getApiKey = () => {
   return import.meta.env.VITE_GEMINI_API_KEY || '';
 };
 
-const AI_FAST_MODEL = "gemini-3-flash-preview";
-const AI_ADVANCED_MODEL = "gemini-3-flash-preview";
+const AI_FAST_MODEL = "gemini-2.5-flash";
+const AI_ADVANCED_MODEL = "gemini-2.5-flash";
 
 const buildApiUrl = (model, apiKey) =>
   `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
@@ -425,9 +425,9 @@ export async function generateStructuredContent(
 export async function streamChatResponse(messages, onChunk, retries = 3) {
   for (let attempt = 0; attempt < retries; attempt++) {
     try {
-      // Use gemini-3-flash-preview for fast responses
+      // Use gemini-2.5-flash for fast responses
       const apiKey = getApiKey();
-      const chatModel = "gemini-3-flash-preview"; // Latest model for chat
+      const chatModel = "gemini-2.5-flash"; // Latest model for chat
       const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${chatModel}:streamGenerateContent?key=${apiKey}`;
 
       const response = await fetch(apiUrl, {

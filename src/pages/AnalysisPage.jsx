@@ -502,9 +502,13 @@ export default function AnalysisPage() {
       </header>
 
       <div className="container mx-auto px-6 py-8">
-        {/* Modern Horizontal Navigation at Top */}
-        <Card glass className="mb-6 p-2">
-          <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-hide">
+        {/* Premium Horizontal Navigation */}
+        <div className="relative mb-8">
+          {/* Background glow effect */}
+          <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 via-purple-500/5 to-pink-500/5 rounded-3xl blur-xl"></div>
+          
+          <div className="relative bg-white/60 backdrop-blur-xl rounded-3xl border border-white/50 shadow-xl shadow-slate-200/50 p-3">
+            <div className="flex items-center gap-3 overflow-x-auto pb-1 scrollbar-hide">
             <TopTab 
               active={activeTab === 'takeaways'} 
               onClick={() => handleTabClick('takeaways')}
@@ -581,8 +585,9 @@ export default function AnalysisPage() {
               Deep Analytics
             </TopTab>
 
+            </div>
           </div>
-        </Card>
+        </div>
 
         {/* Content Area */}
         <Card glass className="min-h-[600px]">
@@ -596,37 +601,90 @@ export default function AnalysisPage() {
                 transition={{ duration: 0.3 }}
               >
                 {activeTab === 'takeaways' && (cache.takeaways || currentAnalysis?.keyFindings) && (
-                  <div className="space-y-4">
-                    <h2 className="text-2xl font-bold gradient-text mb-6">Key Takeaways</h2>
-                    {(cache.takeaways || currentAnalysis.keyFindings).map((finding, i) => {
-                      // Handle both string and object formats
-                      const findingText = typeof finding === 'string' ? finding : finding.finding;
-                      const evidence = typeof finding === 'object' ? finding.evidence : null;
-                      
-                      return (
-                        <motion.div
-                          key={i}
-                          initial={{ opacity: 0, x: -20 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          transition={{ delay: i * 0.1 }}
-                          className="p-6 bg-gradient-to-br from-white to-slate-50 rounded-2xl border-2 border-slate-100 hover:border-prism-200 hover:shadow-lg transition-all duration-300"
-                        >
-                          <div className="flex items-start gap-4">
-                            <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-prism-600 to-accent-purple flex items-center justify-center text-white font-bold text-sm shadow-lg">
-                              {i + 1}
+                  <div className="p-6 md:p-8 space-y-8">
+                    {/* Hero Header */}
+                    <div className="text-center mb-8">
+                      <motion.div
+                        initial={{ scale: 0.8, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        className="relative inline-block mb-4"
+                      >
+                        <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-2xl blur-xl opacity-40 animate-pulse"></div>
+                        <div className="relative inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-cyan-500 via-blue-600 to-purple-600 text-white rounded-full shadow-lg shadow-blue-500/20">
+                          <Sparkles className="w-4 h-4" />
+                          <span className="font-semibold text-sm">Key Research Insights</span>
+                        </div>
+                      </motion.div>
+                      <h1 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-slate-800 via-blue-700 to-purple-600 bg-clip-text text-transparent">
+                        Key Takeaways
+                      </h1>
+                      <p className="text-slate-500 text-sm mt-1 max-w-xl mx-auto">
+                        Key findings and insights from this research
+                      </p>
+                    </div>
+
+                    {/* Takeaways Grid */}
+                    <div className="grid gap-5">
+                      {(cache.takeaways || currentAnalysis.keyFindings).map((finding, i) => {
+                        const findingText = typeof finding === 'string' ? finding : finding.finding;
+                        const evidence = typeof finding === 'object' ? finding.evidence : null;
+                        
+                        return (
+                          <motion.div
+                            key={i}
+                            initial={{ opacity: 0, x: -30 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: i * 0.1 }}
+                            whileHover={{ scale: 1.01, y: -2 }}
+                            className="group relative"
+                          >
+                            {/* Glow effect */}
+                            <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/10 via-blue-500/10 to-purple-500/10 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                            
+                            <div className="relative bg-white/90 backdrop-blur-sm border border-slate-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl hover:border-blue-300 transition-all duration-300">
+                              {/* Gradient accent bar */}
+                              <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-gradient-to-b from-cyan-400 via-blue-500 to-purple-500"></div>
+                              
+                              <div className="p-4 pl-6">
+                                <div className="flex items-start gap-3">
+                                  <div className="flex-shrink-0">
+                                    <div className="w-8 h-8 bg-gradient-to-br from-cyan-400 via-blue-500 to-purple-600 rounded-lg flex items-center justify-center text-white font-bold text-sm shadow-md shadow-blue-500/20 group-hover:scale-110 transition-transform">
+                                      {i + 1}
+                                    </div>
+                                  </div>
+                                  <div className="flex-1 min-w-0">
+                                    <p className="text-slate-700 font-medium leading-relaxed mb-2">
+                                      {findingText}
+                                    </p>
+                                    {evidence && (
+                                      <div className="flex items-start gap-2 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-3 border border-blue-100">
+                                        <Quote className="w-3 h-3 text-blue-500 flex-shrink-0 mt-0.5" />
+                                        <p className="text-xs text-blue-600 italic leading-relaxed">
+                                          {evidence}
+                                        </p>
+                                      </div>
+                                    )}
+                                  </div>
+                                </div>
+                              </div>
                             </div>
-                            <div className="flex-1">
-                              <p className="text-slate-700 leading-relaxed mb-2">{findingText}</p>
-                              {evidence && (
-                                <p className="text-sm text-slate-500 italic pl-4 border-l-2 border-prism-200">
-                                  {evidence}
-                                </p>
-                              )}
-                            </div>
-                          </div>
-                        </motion.div>
-                      );
-                    })}
+                          </motion.div>
+                        );
+                      })}
+                    </div>
+
+                    {/* Summary Footer */}
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.5 }}
+                      className="mt-8 p-5 bg-gradient-to-r from-cyan-50 via-blue-50 to-purple-50 rounded-2xl border border-blue-100 flex items-center justify-center gap-4"
+                    >
+                      <Sparkles className="w-5 h-5 text-blue-500" />
+                      <span className="text-slate-700 font-medium">
+                        {(cache.takeaways || currentAnalysis.keyFindings).length} key insights identified from this research
+                      </span>
+                    </motion.div>
                   </div>
                 )}
 
@@ -734,20 +792,42 @@ export default function AnalysisPage() {
   );
 }
 
-// Top Navigation Tab Component
+// Top Navigation Tab Component - Premium Design
 function TopTab({ active, onClick, icon, children, gradient, loading, loaded }) {
   return (
-    <button
+    <motion.button
       onClick={onClick}
       disabled={loading}
-      className={`group relative flex items-center gap-2 px-5 py-3 rounded-xl font-semibold transition-all duration-300 whitespace-nowrap ${
+      whileHover={{ scale: active ? 1.02 : 1.05 }}
+      whileTap={{ scale: 0.98 }}
+      className={`group relative flex items-center gap-2.5 px-5 py-3 rounded-2xl font-semibold transition-all duration-300 whitespace-nowrap overflow-hidden ${
         active 
-          ? `bg-gradient-to-r ${gradient} text-white shadow-lg scale-105` 
-          : 'bg-white text-slate-700 hover:shadow-md hover:scale-102 border-2 border-transparent hover:border-slate-200'
-      } ${loading ? 'opacity-50 cursor-wait' : ''}`}
+          ? 'text-white shadow-xl' 
+          : 'bg-white/70 backdrop-blur-sm text-slate-700 hover:bg-white hover:shadow-lg border border-slate-200/80 hover:border-slate-300'
+      } ${loading ? 'opacity-60 cursor-wait' : ''}`}
     >
-      {active && <div className="absolute inset-0 bg-white/20 rounded-xl blur-xl"></div>}
-      <div className={`relative ${active ? 'text-white' : 'text-slate-600 group-hover:text-slate-900'}`}>
+      {/* Active state gradient background */}
+      {active && (
+        <>
+          <div className={`absolute inset-0 bg-gradient-to-r ${gradient} to-transparent`}></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0"></div>
+          {/* Shimmer effect */}
+          <motion.div
+            className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12"
+            initial={{ x: '-100%' }}
+            animate={{ x: '200%' }}
+            transition={{ duration: 2, repeat: Infinity, repeatDelay: 3, ease: "easeInOut" }}
+          />
+        </>
+      )}
+      
+      {/* Glow effect for active tab */}
+      {active && (
+        <div className={`absolute -inset-1 bg-gradient-to-r ${gradient} rounded-2xl blur-lg opacity-50 -z-10`}></div>
+      )}
+      
+      {/* Icon */}
+      <div className={`relative z-10 ${active ? 'text-white' : 'text-slate-500 group-hover:text-slate-800'} transition-colors`}>
         {loading ? (
           <motion.div
             animate={{ rotate: 360 }}
@@ -756,16 +836,32 @@ function TopTab({ active, onClick, icon, children, gradient, loading, loaded }) 
             {icon}
           </motion.div>
         ) : (
-          icon
+          <motion.div whileHover={{ rotate: [0, -10, 10, 0] }} transition={{ duration: 0.4 }}>
+            {icon}
+          </motion.div>
         )}
       </div>
-      <span className="relative text-sm">{children}</span>
+      
+      {/* Label */}
+      <span className={`relative z-10 text-sm font-medium ${active ? 'font-bold' : ''}`}>{children}</span>
+      
+      {/* Loaded indicator dot */}
       {loaded && !active && (
-        <div className="absolute top-2 right-2 w-2 h-2 bg-green-500 rounded-full"></div>
+        <motion.div
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          className="absolute top-2 right-2 w-2 h-2 bg-gradient-to-r from-emerald-400 to-green-500 rounded-full shadow-lg shadow-green-500/50"
+        />
       )}
+      
+      {/* Active indicator line */}
       {active && (
-        <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-1/2 h-1 bg-white rounded-full"></div>
+        <motion.div
+          layoutId="activeTab"
+          className="absolute -bottom-0.5 left-4 right-4 h-1 bg-white rounded-full shadow-lg"
+          transition={{ type: "spring", stiffness: 300, damping: 30 }}
+        />
       )}
-    </button>
+    </motion.button>
   );
 }
