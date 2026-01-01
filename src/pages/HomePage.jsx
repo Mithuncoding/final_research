@@ -92,6 +92,7 @@ export default function HomePage() {
             </div>
           </div>
           <div className="flex items-center gap-4">
+            <button onClick={() => navigate('/competitive')} className="text-white/90 hover:text-white text-sm font-medium hidden md:block">Why PRISM?</button>
             <button onClick={() => navigate('/about')} className="text-white/90 hover:text-white text-sm font-medium hidden md:block">Team</button>
             <button onClick={() => navigate('/history')} className="text-white/90 hover:text-white text-sm font-medium hidden md:block">History</button>
             <button onClick={() => setIsSettingsOpen(true)} className="text-white/90 hover:text-white text-sm font-medium hidden md:block">Settings</button>

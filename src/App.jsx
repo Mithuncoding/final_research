@@ -5,6 +5,7 @@ import AnalysisPage from './pages/AnalysisPage';
 import MultiPaperPage from './pages/MultiPaperPage';
 import HistoryPage from './pages/HistoryPage';
 import ComparePage from './pages/ComparePage';
+import CompetitivePage from './pages/CompetitivePage';
 import MetricsPage from './pages/MetricsPage';
 import AboutPage from './pages/AboutPage';
 import CommandPalette from './components/ui/CommandPalette';
@@ -18,6 +19,7 @@ function App() {
         <Route path="/multi-paper" element={<MultiPaperPage />} />
         <Route path="/history" element={<HistoryPage />} />
         <Route path="/compare" element={<ComparePage />} />
+        <Route path="/competitive" element={<CompetitivePage />} />
         <Route path="/metrics" element={<MetricsPage />} />
         <Route path="/about" element={<AboutPage />} />
       </Routes>
